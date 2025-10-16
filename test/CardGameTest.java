@@ -23,4 +23,8 @@ public class CardGameTest {
                 System.out.println(players.get(i).getDenomination(j));
             }
         }
+     //Debug
+        for (int i = 0; i < n_of_players; i++){
+            System.out.println(players.get(i).get_name() + ": " + players.get(i).getDeckPull().getDeckName() + " " + players.get(i).getDeckPush().getDeckName());
+        }
 */

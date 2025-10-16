@@ -79,6 +79,21 @@ public class CardGame {
             }
         }
 
+        // Set names for players and decks
+        for (int i = 0; i < n_of_players; i++){
+            players.get(i).SetName(i);
+            ListCardDecks.get(i).setDeckName(i);
+        }
+
+        for (int i = 0; i < n_of_players; i++){
+            if (i == n_of_players - 1){
+                players.get(i).setDecks(ListCardDecks.get(i), ListCardDecks.get(0));
+            }
+            else{
+                players.get(i).setDecks(ListCardDecks.get(i), ListCardDecks.get(i + 1));
+            }
+            }
+
         // make files for each of the players
         for (int i = 0; i < players.size(); i++) {
             try (FileOutputStream output = new FileOutputStream(players.get(i).get_name() + "_output.txt", false)) {

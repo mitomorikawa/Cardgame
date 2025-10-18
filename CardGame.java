@@ -1,13 +1,13 @@
 /*
 1. takes input (n_of_players, pack_file_path)
 2. convert the string to int, then to Card
-3. store Cards in CardDeck obj called pack 
+3. store Cards in CardDeck obj called pack
 4. distribute Cards to players from index 0, 1 by 1
 5. 
 
 */
 import java.util.Scanner;
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.io.*;
 
 public class CardGame {
@@ -36,6 +36,7 @@ public class CardGame {
     }
 
     public static void main(String[] args){
+        Counter turns = new Counter();
         readFile();
 
         ArrayList<Integer> pack_int = new ArrayList<Integer>();
@@ -54,7 +55,7 @@ public class CardGame {
 
         
         for (int i = 0; i < n_of_players; i++){
-            Player player = new Player();
+            Player player = new Player(turns, n_of_players);
             players.add(player);
         }
 
@@ -103,23 +104,21 @@ public class CardGame {
             }
         }
 
-        // Check for winner
+        for(int i = 0; i < players.size(); i++){
+            players.get(i).start();
+        }
+    }
+
+/*         // Check for winner
         if (determineWinner() != -1) {
             return;
         } else {
             return;
         }
-    }
-
-    public static boolean checkWinner(Player player){
-        return player.getDenomination(0) == player.getDenomination(1) &&
-               player.getDenomination(1) == player.getDenomination(2) &&
-               player.getDenomination(2) == player.getDenomination(3);
-    }
-
+*/
     public static int determineWinner(){
         for (int i = 0; i < n_of_players; i++){
-            if (checkWinner(players.get(i))){
+            if (players.get(i).checkWinner()){
                 return i;
             }
         }

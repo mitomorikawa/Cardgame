@@ -18,6 +18,7 @@ public class Player extends Thread{
 
     public Player(Counter turns, int n_of_players){
         this.turns = turns;
+        this.n_of_players = n_of_players;
         hand = new ArrayList<Card>();
     }
 
@@ -51,31 +52,41 @@ public class Player extends Thread{
     }
 
     public synchronized void endTurn() {
-        System.out.println(turns.getValue());
+        
+        synchronized(turns){
         if (turns.addTurn() == get_n_of_players()) {
+            System.out.println("current counter value " + turns.getValue());
             turns.resetTurn();
-            notifyAll();
+            System.out.println(playerName + " sleeping...");
+            turns.notifyAll();
         } else {
             try {
+                System.out.println("current counter value " + turns.getValue());
                 System.out.println("waiting");
-                wait();
+                turns.wait();
+                System.out.println("Notified. New turn begins");
             } catch (InterruptedException e){
                 }          
+        }
         }
     }
 
     public synchronized void pickFromDeck(){
         Card card = deckPull.drawCard();
         addCard(card);
+        System.out.println(playerName + " picked " + card.getDenomination());
     }
 
     public synchronized void addToDeck() {
         for(int i = 0; i < this.hand.size(); i++){
             if(this.hand.get(i).getDenomination() != this.playerIndex + 1) {
                 this.deckPush.addCard(removeCard(i));
+                return;
             }
         }
+
         if (checkWinner()){
+            System.out.println(get_name() + " won");
             turns.end_game();
         }
     }
@@ -83,22 +94,41 @@ public class Player extends Thread{
     @Override
     public void run(){
         do{
-            System.out.println("new turn");
+            System.out.println("turn begins." + playerName + " hand " + 
+            hand.get(0).getDenomination() + " " +  hand.get(1).getDenomination() + " " +
+                    hand.get(2).getDenomination() + " " + 
+                    hand.get(3).getDenomination() + " "+
+                    deckPull.getDeckName() + " " + 
+                    deckPull.getDenomination(0) + " " + 
+                    deckPull.getDenomination(1) + " " +
+                    deckPull.getDenomination(2) + " " + 
+                    deckPull.getDenomination(3) + " " );
             pickFromDeck();
-            System.out.println("picked from deck");
             addToDeck();
-            System.out.println("added to deck");
             endTurn();
-            System.out.println("ended turn");
+            System.out.println("ended turn." + playerName + " hand " + 
+            hand.get(0).getDenomination() + " " +  hand.get(1).getDenomination() + " " +
+                    hand.get(2).getDenomination() + " " + 
+                    hand.get(3).getDenomination() + " "+
+                    deckPush.getDeckName() + " " + 
+                    deckPush.getDenomination(0) + " " + 
+                    deckPush.getDenomination(1) + " " +
+                    deckPush.getDenomination(2) + " " + 
+                    deckPush.getDenomination(3) + " " );
         } while(!turns.isGameEnded());
     }
 
     public boolean checkWinner(){
+        
         return getDenomination(0) == getDenomination(1) &&
                getDenomination(1) == getDenomination(2) &&
                getDenomination(2) == getDenomination(3);
     }
 
+    public synchronized void displayHand(){
+        System.out.println(playerName + " hand " + hand.get(0).getDenomination() + " " +  hand.get(1).getDenomination() + " " +
+                    hand.get(2).getDenomination() + " " + hand.get(3).getDenomination() + " ");
+    }
 
     
     

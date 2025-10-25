@@ -28,11 +28,6 @@ public class CardGame {
             System.out.println("Invalid input. Please enter a valid integer for the number of players.");
             return; // Exit the method if input is invalid
         }
-
-        System.out.println("Please enter the path to the pack file");
-        //Scanner inputScanner = new Scanner(System.in);
-        //System.out.println("");
-
     }
 
     public static void main(String[] args){
@@ -40,12 +35,28 @@ public class CardGame {
         readFile();
 
         ArrayList<Integer> pack_int = new ArrayList<Integer>();
-        for (int i = 0; i <  2 * n_of_players; i++){
-            pack_int.add(1);
-            pack_int.add(2);
-            pack_int.add(3);
-            pack_int.add(4);
+        File file = new File("pack.txt");
+
+        try (Scanner fileScanner = new Scanner(file)){
+        for (int i = 0; i < 8 * n_of_players; i++){
+            try {
+                
+                if (!fileScanner.hasNextLine() && i < 8 * n_of_players - 1){
+                    throw new EOFException("The pack file has fewer cards than expected. Generate a correct pack file by running GeneratePack.java with the correct number of players.");
+                }
+                String cardStr = fileScanner.nextLine();
+                int cardInt = Integer.parseInt(cardStr);
+                pack_int.add(cardInt);
+            } catch (EOFException e){
+                System.err.println(e.getMessage());
+                return;
+            }
+        } 
+        } catch (FileNotFoundException e){
+            System.err.println("Pack file not found: " + file.getAbsolutePath());
+            return;
         }
+
 
         CardDeck pack = new CardDeck();
         for (int i = 0; i < pack_int.size(); i++){

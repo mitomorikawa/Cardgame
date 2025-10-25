@@ -50,8 +50,11 @@ public class CardGame {
             } catch (EOFException e){
                 System.err.println(e.getMessage());
                 return;
+            } catch (NumberFormatException e){
+                System.err.println("Wrong number format in pack file: " + e.getMessage());
+                return;
             }
-        } 
+        }
         } catch (FileNotFoundException e){
             System.err.println("Pack file not found: " + file.getAbsolutePath());
             return;

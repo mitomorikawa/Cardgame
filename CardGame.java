@@ -94,10 +94,12 @@ public class CardGame {
                 players.get(i).setDecks(ListCardDecks.get(i), ListCardDecks.get(i + 1));
             }
             }
-        
-        for (int i = 0; i < n_of_players; i++){
+            
+        //debug
+        /*for (int i = 0; i < n_of_players; i++){
             System.out.println(players.get(i).get_name() + ": " + players.get(i).getDeckPull().getDeckName() + " " + players.get(i).getDeckPush().getDeckName());
-        }
+        }*/
+
         // make files for each of the players
         for (int i = 0; i < players.size(); i++) {
             try (FileOutputStream output = new FileOutputStream(players.get(i).get_name() + "_output.txt", false)) {
@@ -107,8 +109,14 @@ public class CardGame {
             }
         }
 
+        for (int i = 0; i < players.size(); i++) { // adding initial hand to output file
+            String initialHand = players.get(i).get_name() + " initial hand " + players.get(i).readCardInHand(0) + " " + players.get(i).readCardInHand(1) + " " + players.get(i).readCardInHand(2) + " " + players.get(i).readCardInHand(3) + "\n";
+            players.get(i).outputToFile(initialHand);
+        }
+
         if (determineWinner() != -1) {
-            // code to output winner and files 
+            writeToFiles(determineWinner());
+            System.out.println(players.get(determineWinner()).get_name() + " wins");
         } else {
             for(int i = 0; i < players.size(); i++){
                 players.get(i).start();
@@ -116,20 +124,23 @@ public class CardGame {
             for(int i = 0; i < players.size(); i++){
                 try {
                     players.get(i).join();
-                } catch (InterruptedException e) {
-                    
+                } catch (InterruptedException e) {   
                 }
             }
-            
+            writeToFiles(determineWinner());
+            System.out.println(players.get(determineWinner()).get_name() + " wins");
         }
 
         for (int i = 0; i < ListCardDecks.size(); i++) {
-            System.out.println("Deck" + i+1);
-            for (int j = 0; j < ListCardDecks.get(i).size(); j++) {
-                System.out.println(ListCardDecks.get(i).getDenomination(j));
+            String deckContents = ListCardDecks.get(i).getDeckName() + " contents: " + ListCardDecks.get(i).getDenomination(0) + " " + ListCardDecks.get(i).getDenomination(1) + " " + ListCardDecks.get(i).getDenomination(2) + " " + ListCardDecks.get(i).getDenomination(3) + "\n";
+            try (FileOutputStream output = new FileOutputStream(ListCardDecks.get(i).getDeckName() + "_output.txt", false)) {
+                byte[] deckContentsBytes = deckContents.getBytes();
+                output.write(deckContentsBytes);
+            } catch (IOException e){
+                System.out.println("Error");
+                e.printStackTrace();
             }
         }
-        
     }
 
 /*         // Check for winner
@@ -139,6 +150,20 @@ public class CardGame {
             return;
         }
 */
+    public static void writeToFiles(int WinnerIndex) {
+        for (int i = 0; i < players.size(); i++) {
+            if (i == WinnerIndex) {
+                String currentName = players.get(i).get_name();
+                String finalMessage = currentName + " wins\n" + currentName + " exits\n" + currentName + " final hand: " + players.get(i).readCardInHand(0) + " " + players.get(i).readCardInHand(1) + " " + players.get(i).readCardInHand(2) + " " + players.get(i).readCardInHand(3) + "\n";
+                players.get(i).outputToFile(finalMessage);
+            } else {
+                String currentName = players.get(i).get_name();
+                String finalMessage = players.get(WinnerIndex).get_name() + " has informed " + currentName + " that " + players.get(WinnerIndex).get_name() + " has won\n" + currentName + " exits\n" + currentName + " hand: " + players.get(i).readCardInHand(0) + " " + players.get(i).readCardInHand(1) + " " + players.get(i).readCardInHand(2) + " " + players.get(i).readCardInHand(3) + "\n";
+                players.get(i).outputToFile(finalMessage);
+            }
+        }
+    }
+
     public static int determineWinner(){
         for (int i = 0; i < n_of_players; i++){
             if (players.get(i).checkWinner()){

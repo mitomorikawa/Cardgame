@@ -52,19 +52,32 @@ public class Player extends Thread{
     }
 
     public synchronized void endTurn() {
-        
         synchronized(turns){
         if (turns.addTurn() == get_n_of_players()) {
-            System.out.println("current counter value " + turns.getValue());
+            System.out.println(playerName + "current counter value " + turns.getValue());
             turns.resetTurn();
-            System.out.println(playerName + " sleeping...");
+            System.out.println(playerName +" notifies everyone");
             turns.notifyAll();
         } else {
             try {
-                System.out.println("current counter value " + turns.getValue());
+                System.out.println(playerName + "current counter value " + turns.getValue());
                 System.out.println("waiting");
                 turns.wait();
                 System.out.println("Notified. New turn begins");
+            } catch (InterruptedException e){
+                }          
+        }
+        }
+    }
+
+    public synchronized void nextTurn() {
+        synchronized(turns){
+        if (turns.addTurn() == get_n_of_players()) {
+            turns.resetTurn();
+            turns.notifyAll();
+        } else {
+            try {
+                turns.wait();
             } catch (InterruptedException e){
                 }          
         }
@@ -81,19 +94,17 @@ public class Player extends Thread{
         for(int i = 0; i < this.hand.size(); i++){
             if(this.hand.get(i).getDenomination() != this.playerIndex + 1) {
                 this.deckPush.addCard(removeCard(i));
-                return;
+                break;
             }
-        }
-
-        if (checkWinner()){
-            System.out.println(get_name() + " won");
-            turns.end_game();
         }
     }
 
     @Override
     public void run(){
+        int i = 0;
         do{
+            System.out.println(i);
+            i++;
             System.out.println("turn begins." + playerName + " hand " + 
             hand.get(0).getDenomination() + " " +  hand.get(1).getDenomination() + " " +
                     hand.get(2).getDenomination() + " " + 
@@ -106,7 +117,7 @@ public class Player extends Thread{
             pickFromDeck();
             addToDeck();
             endTurn();
-            System.out.println("ended turn." + playerName + " hand " + 
+            System.out.println("ended turn. " + playerName + " hand " + 
             hand.get(0).getDenomination() + " " +  hand.get(1).getDenomination() + " " +
                     hand.get(2).getDenomination() + " " + 
                     hand.get(3).getDenomination() + " "+
@@ -115,24 +126,26 @@ public class Player extends Thread{
                     deckPush.getDenomination(1) + " " +
                     deckPush.getDenomination(2) + " " + 
                     deckPush.getDenomination(3) + " " );
-        } while(!turns.isGameEnded());
+            System.out.println(turns.isGameEnded());
+            System.out.println(playerName + " " + i);
+            if (checkWinner()){
+                System.out.println(get_name() + " won");
+                turns.end_game();
+            }
+            nextTurn();
+        } while(!turns.isGameEnded() /*is false*/);
     }
 
-    public boolean checkWinner(){
-        
+    public synchronized boolean checkWinner(){
         return getDenomination(0) == getDenomination(1) &&
                getDenomination(1) == getDenomination(2) &&
-               getDenomination(2) == getDenomination(3);
+               getDenomination(2) == getDenomination(3); 
     }
 
     public synchronized void displayHand(){
         System.out.println(playerName + " hand " + hand.get(0).getDenomination() + " " +  hand.get(1).getDenomination() + " " +
                     hand.get(2).getDenomination() + " " + hand.get(3).getDenomination() + " ");
     }
-
-    
-    
-
 
     // Debugging method to get denomination of card at index
     public int getDenomination(int index){

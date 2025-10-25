@@ -107,9 +107,29 @@ public class CardGame {
             }
         }
 
-        for(int i = 0; i < players.size(); i++){
-            players.get(i).start();
+        if (determineWinner() != -1) {
+            // code to output winner and files 
+        } else {
+            for(int i = 0; i < players.size(); i++){
+                players.get(i).start();
+            }
+            for(int i = 0; i < players.size(); i++){
+                try {
+                    players.get(i).join();
+                } catch (InterruptedException e) {
+                    
+                }
+            }
+            
         }
+
+        for (int i = 0; i < ListCardDecks.size(); i++) {
+            System.out.println("Deck" + i+1);
+            for (int j = 0; j < ListCardDecks.get(i).size(); j++) {
+                System.out.println(ListCardDecks.get(i).getDenomination(j));
+            }
+        }
+        
     }
 
 /*         // Check for winner

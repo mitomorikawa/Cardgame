@@ -12,6 +12,8 @@ import static org.junit.Assert.*;
 import java.io.FileWriter; 
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.io.IOException;
 import java.io.File;
 import java.util.Scanner;
@@ -45,7 +47,11 @@ public class TestCardGame {
         String input = n_of_players + "\n";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(out));
         CardGame.main(args);
+        String standardOutput = out.toString();
+        assertEquals("Please enter the number of players\nPlayer1 wins\n", standardOutput);
         for (int i = 0; i < n_of_players; i++){
             try (Scanner deckFile = new Scanner(new File("../txt/Deck"+(i+1)+"_output.txt"))){
                 String deckFileLine = deckFile.nextLine();

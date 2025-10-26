@@ -1,11 +1,5 @@
-/*
-1. takes input (n_of_players, pack_file_path)
-2. convert the string to int, then to Card
-3. store Cards in CardDeck obj called pack
-4. distribute Cards to players from index 0, 1 by 1
-5. 
+package cardgame;
 
-*/
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.*;
@@ -35,7 +29,7 @@ public class CardGame {
         readFile();
 
         ArrayList<Integer> pack_int = new ArrayList<Integer>();
-        File file = new File("pack.txt");
+        File file = new File("../txt/pack.txt");
 
         try (Scanner fileScanner = new Scanner(file)){
         for (int i = 0; i < 8 * n_of_players; i++){
@@ -46,12 +40,13 @@ public class CardGame {
                 }
                 String cardStr = fileScanner.nextLine();
                 int cardInt = Integer.parseInt(cardStr);
+                if (cardInt < 0) throw new NumberFormatException("Found a negative integer in the pack file.");
                 pack_int.add(cardInt);
             } catch (EOFException e){
                 System.err.println(e.getMessage());
                 return;
             } catch (NumberFormatException e){
-                System.err.println("Wrong number format in pack file: " + e.getMessage());
+                System.err.println("Provide a valid pack file. " + e.getMessage());
                 return;
             }
         }
@@ -116,7 +111,7 @@ public class CardGame {
 
         // make files for each of the players
         for (int i = 0; i < players.size(); i++) {
-            try (FileOutputStream output = new FileOutputStream(players.get(i).get_name() + "_output.txt", false)) {
+            try (FileOutputStream output = new FileOutputStream("../txt/" + players.get(i).get_name() + "_output.txt", false)) {
             } catch (IOException e){
                 System.out.println("Error");
                 e.printStackTrace();
@@ -147,7 +142,7 @@ public class CardGame {
 
         for (int i = 0; i < ListCardDecks.size(); i++) {
             String deckContents = ListCardDecks.get(i).getDeckName() + " contents: " + ListCardDecks.get(i).getDenomination(0) + " " + ListCardDecks.get(i).getDenomination(1) + " " + ListCardDecks.get(i).getDenomination(2) + " " + ListCardDecks.get(i).getDenomination(3) + "\n";
-            try (FileOutputStream output = new FileOutputStream(ListCardDecks.get(i).getDeckName() + "_output.txt", false)) {
+            try (FileOutputStream output = new FileOutputStream("../txt/" + ListCardDecks.get(i).getDeckName() + "_output.txt", false)) {
                 byte[] deckContentsBytes = deckContents.getBytes();
                 output.write(deckContentsBytes);
             } catch (IOException e){

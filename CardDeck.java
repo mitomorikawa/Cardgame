@@ -26,7 +26,6 @@ public class CardDeck {
         return deck.remove(0);
     }
 
-    // Debugging method to get denomination of card at index
     public int getDenomination(int index){
         if(index < 0 || index >= deck.size()){
             return -1;

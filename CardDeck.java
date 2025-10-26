@@ -1,12 +1,7 @@
-/*
-•CardDeck()
-    •empty list
-•ArrayList [Card] deck
-•
+package cardgame;
 
- */
 import java.util.ArrayList;
-public class CardDeck extends Thread{
+public class CardDeck {//{extends Thread{
     private String deckname;
     private ArrayList<Card> deck;
     public CardDeck(){

@@ -1,4 +1,6 @@
-public class Card extends Thread{
+package cardgame;
+
+public class Card {//extends Thread{
     private int denomination;
     public Card(int denomination){
         this.denomination = denomination;

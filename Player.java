@@ -1,9 +1,4 @@
-
-/*
-• Player ()
-        :empty list
-• 
- */
+package cardgame;
 
 import java.util.ArrayList;
 import java.io.FileOutputStream;
@@ -58,6 +53,9 @@ public class Player extends Thread{
     }
 
     public synchronized void endTurn() {
+        if (get_n_of_players() == 1){
+            return;
+        }
         synchronized(turns){
         if (turns.addTurn() == get_n_of_players()) {
             turns.resetTurn();
@@ -83,7 +81,7 @@ public class Player extends Thread{
             if(this.hand.get(i).getDenomination() != this.playerIndex + 1) {
                 Card cardRemoved = removeCard(i);
                 this.deckPush.addCard(cardRemoved);
-                String discardedCard = playerName + " discards a " + cardRemoved.getDenomination() + " to deck " + this.deckPush.getDeckName() + "\n";
+                String discardedCard = playerName + " discards a " + cardRemoved.getDenomination() + " to " + this.deckPush.getDeckName() + "\n";
                 outputToFile(discardedCard);
                 break;
             }
@@ -112,7 +110,7 @@ public class Player extends Thread{
     }
 
     public void outputToFile(String message) {
-        try (FileOutputStream output = new FileOutputStream(playerName + "_output.txt", true)) {
+        try (FileOutputStream output = new FileOutputStream("../txt/" + playerName + "_output.txt", true)) {
             byte[] messageBytes = message.getBytes();
             output.write(messageBytes);
         } catch (IOException e){

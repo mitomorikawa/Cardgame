@@ -35,7 +35,7 @@ public class TestCounter{
     }
 
     @Test
-    public void testEndGame(){
+    public void testEndGameAndIsGameEnded(){
         assertFalse(counter.isGameEnded());
         counter.end_game();
         assertTrue(counter.isGameEnded());

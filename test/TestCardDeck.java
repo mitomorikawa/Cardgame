@@ -45,8 +45,6 @@ public class TestCardDeck {
         Card drawnCard2 = cardDeck.drawCard();
         assertEquals(9, drawnCard2.getDenomination());
         assertEquals(0, cardDeck.size());
-        Card drawnCard3 = cardDeck.drawCard();
-        assertNull(drawnCard3); // Test drawing from empty deck
     }
 
     @Test

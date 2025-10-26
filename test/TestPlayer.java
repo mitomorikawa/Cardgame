@@ -30,6 +30,12 @@ public class TestPlayer{
     }
 
     @Test
+    public void testGetNOfPlayers(){
+        player = new Player(counter, 4);
+        assertEquals(4, player.get_n_of_players());
+    }
+
+    @Test
     public void testAddCard(){
         player = new Player(counter, 4);
         player.addCard(new cardgame.Card(3));

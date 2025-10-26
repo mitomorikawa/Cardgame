@@ -35,16 +35,17 @@ public class TestCardDeck {
 
     @Test
     public void testDrawCard(){
+        // add 4 and 9 to a deck
         Card card1 = new Card(4);
         Card card2 = new Card(9);
-        cardDeck.addCard(card1);
+        cardDeck.addCard(card1); 
         cardDeck.addCard(card2);
-        Card drawnCard1 = cardDeck.drawCard();
+        Card drawnCard1 = cardDeck.drawCard();  // draw 4 from the deck
         assertEquals(4, drawnCard1.getDenomination());
         assertEquals(1, cardDeck.size());
-        Card drawnCard2 = cardDeck.drawCard();
+        Card drawnCard2 = cardDeck.drawCard();  // draw 9 from the deck
         assertEquals(9, drawnCard2.getDenomination());
-        assertEquals(0, cardDeck.size());
+        assertEquals(0, cardDeck.size()); // no cards in the deck
     }
 
     @Test

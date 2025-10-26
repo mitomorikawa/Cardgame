@@ -39,27 +39,27 @@ public class TestCardGame {
                 "Player3 current hand is 3 4 3 3", "Player1 has informed Player3 that Player1 has won", "Player3 exits","Player3 hand: 3 4 3 3"}};
         try (FileWriter writer = new FileWriter(path)){
             for (int i : pack){
-                writer.write(Integer.toString(i) + "\n");
+                writer.write(Integer.toString(i) + "\n"); // Create a pack file
             }
         } catch (IOException e){
             e.printStackTrace();
         }
-        String input = n_of_players + "\n";
+        String input = n_of_players + "\n"; // Simulate a standard input 
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         System.setOut(new PrintStream(out));
         CardGame.main(args);
-        String standardOutput = out.toString();
+        String standardOutput = out.toString(); // Standard output from main will be stored here
         assertEquals("Please enter the number of players\nPlayer1 wins\n", standardOutput);
         for (int i = 0; i < n_of_players; i++){
-            try (Scanner deckFile = new Scanner(new File("../txt/Deck"+(i+1)+"_output.txt"))){
+            try (Scanner deckFile = new Scanner(new File("../txt/Deck"+(i+1)+"_output.txt"))){ // verify the contents of deck output files
                 String deckFileLine = deckFile.nextLine();
                 assertEquals(expectedDeckFileLine[i], deckFileLine);
             } catch (Exception e){
             e.printStackTrace();
             }
-            try (Scanner playerFile = new Scanner(new File("../txt/Player"+(i+1)+"_output.txt"))){
+            try (Scanner playerFile = new Scanner(new File("../txt/Player"+(i+1)+"_output.txt"))){ // verify the contents of player output files
                 for (int j = 0; j < expectedPlayerFileLine[i].length; j++){
                     String playerFileLine = playerFile.nextLine();
                     assertEquals(expectedPlayerFileLine[i][j], playerFileLine);

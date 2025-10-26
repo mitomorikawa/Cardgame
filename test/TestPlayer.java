@@ -41,9 +41,6 @@ public class TestPlayer{
         player.addCard(new cardgame.Card(3));
         assertEquals(3, player.getDenomination(0));
     }
-    /*remove readCardInHand 
-       SetName -> setName
-       remove displayHand */
 
     @Test
     public void testGetNameAndSetName(){
@@ -83,11 +80,11 @@ public class TestPlayer{
         File f = new File("../txt/Player1_output.txt"); //Prepare a file object to check file output
         if (f.exists()) f.delete(); // Ensure clean state
         player = new Player(counter, 4);
-        player.setName(0);
+        player.setName(0); // Player 1
         CardDeck deck = new CardDeck();
-        deck.setDeckName(0);
+        deck.setDeckName(0); // Deck 1
         deck.addCard(new Card(9));
-        player.setDecks(deck, new CardDeck());
+        player.setDecks(deck, new CardDeck()); // set Deck 1 as Player1.deckPull
         player.pickFromDeck();
         assertEquals(9, player.getDenomination(0)); // Card with denomination 9 should be in hand
 
@@ -108,15 +105,18 @@ public class TestPlayer{
         player.setName(1); // player 2
         CardDeck deckPush = new CardDeck();
         deckPush.setDeckName(2); // deck 3
-        player.setDecks(new CardDeck(), deckPush);
+        deckPush.addCard(new Card(1)); // Suppose deck3 has 3 cards before player2 discards a card
+        deckPush.addCard(new Card(1));
+        deckPush.addCard(new Card(1));
+        player.setDecks(new CardDeck(), deckPush); // set deck 3 as deckPush
         player.addCard(new Card(2)); // before discarding, hand has 2,2,5,4,2
         player.addCard(new Card(2)); 
         player.addCard(new Card(5));
         player.addCard(new Card(4));
         player.addCard(new Card(2));
         player.addToDeck();
-        assertEquals(1, deckPush.size()); // Only one card should be added to deckPush
-        assertEquals(5, deckPush.getDenomination(0)); // The card with denomination 3 should be in deckPush
+        assertEquals(4, deckPush.size()); // Only one card should be added to deckPush
+        assertEquals(5, deckPush.getDenomination(3)); // The card with denomination 5 should be in deckPush
         assertEquals(2, player.getDenomination(0)); // The remaining cards in hand should be 2,2,4,2
         assertEquals(2, player.getDenomination(1));
         assertEquals(4, player.getDenomination(2));
@@ -189,41 +189,40 @@ public class TestPlayer{
     public void testRun(){
         // 1. player 1 wins in round 1
         // 2. player 1 wins in round 2
-        // 3. multiple winners -> first one to notify wins
         Counter counter1 = new Counter();
         Player player1_1 = new Player(counter1, 3);
         player1_1.setName(0);
-        player1_1.addCard(new Card(1));
+        player1_1.addCard(new Card(1)); // player1_1's initial hand is 1,1,1,2
         player1_1.addCard(new Card(1));
         player1_1.addCard(new Card(1));
         player1_1.addCard(new Card(2)); 
         Player player1_2 = new Player(counter1, 3);
         player1_2.setName(1);
-        player1_2.addCard(new Card(3));
+        player1_2.addCard(new Card(3)); // player1_2's initial hand is 3,2,3,4
         player1_2.addCard(new Card(2));
         player1_2.addCard(new Card(3));
         player1_2.addCard(new Card(4));
         Player player1_3 = new Player(counter1, 3);
         player1_3.setName(2);
-        player1_3.addCard(new Card(1));
+        player1_3.addCard(new Card(1)); // player1_3's initial hand is 1,2,3,4
         player1_3.addCard(new Card(2));
         player1_3.addCard(new Card(3));
         player1_3.addCard(new Card(4));
         CardDeck deck1_1 = new CardDeck();
         deck1_1.setDeckName(0);
-        deck1_1.addCard(new Card(1));
+        deck1_1.addCard(new Card(1)); // deck1_1 initially has 1,1,1,1
         deck1_1.addCard(new Card(1));
         deck1_1.addCard(new Card(1));
         deck1_1.addCard(new Card(1));
         CardDeck deck1_2 = new CardDeck();
         deck1_2.setDeckName(1);
-        deck1_2.addCard(new Card(2));
+        deck1_2.addCard(new Card(2)); // deck1_2 initially has 2,2,2,2
         deck1_2.addCard(new Card(2));
         deck1_2.addCard(new Card(2));
         deck1_2.addCard(new Card(2));
         CardDeck deck1_3 = new CardDeck();
         deck1_3.setDeckName(2);
-        deck1_3.addCard(new Card(3));
+        deck1_3.addCard(new Card(3)); // deck1_3 initially has 3,3,3,3
         deck1_3.addCard(new Card(3));
         deck1_3.addCard(new Card(3));
         deck1_3.addCard(new Card(3));
@@ -235,25 +234,25 @@ public class TestPlayer{
         player1_2.start();
         player1_3.start();
         try{
-            player1_1.join();
+            player1_1.join(); // The main thread continues only after the player thread finishes.
             player1_2.join();
             player1_3.join();
         } catch (InterruptedException e){
             e.printStackTrace();
         }
 
-        assertEquals(1, player1_1.getDenomination(0));
+        assertEquals(1, player1_1.getDenomination(0)); // Player 1_1's final hand is 1,1,1,1
         assertEquals(1, player1_1.getDenomination(1));
         assertEquals(1, player1_1.getDenomination(2));
-        assertEquals(1, player1_1.getDenomination(3)); // player 1 should have 4 of denomination 1
-        assertEquals(2, player1_2.getDenomination(0));
+        assertEquals(1, player1_1.getDenomination(3)); 
+        assertEquals(2, player1_2.getDenomination(0)); // Player 1_2's final hand is 2,3,4,2
         assertEquals(3, player1_2.getDenomination(1));
         assertEquals(4, player1_2.getDenomination(2));
         assertEquals(2, player1_2.getDenomination(3));
-        assertEquals(2, player1_3.getDenomination(0));
+        assertEquals(2, player1_3.getDenomination(0)); // Player 1_3's final hand is 2,3,4,3
         assertEquals(3, player1_3.getDenomination(1));
         assertEquals(4, player1_3.getDenomination(2));
-        assertEquals(3, player1_3.getDenomination(3)); // 
+        assertEquals(3, player1_3.getDenomination(3));  
         assertEquals(1, deck1_1.getDenomination(0));
         assertEquals(1, deck1_1.getDenomination(1));
         assertEquals(1, deck1_1.getDenomination(2));
@@ -270,37 +269,37 @@ public class TestPlayer{
         Counter counter2 = new Counter();
         Player player2_1 = new Player(counter2, 3);
         player2_1.setName(0);
-        player2_1.addCard(new Card(1));
+        player2_1.addCard(new Card(1)); // player2_1's initial hand is 1,1,2,2
         player2_1.addCard(new Card(1));
         player2_1.addCard(new Card(2));
         player2_1.addCard(new Card(2)); 
         Player player2_2 = new Player(counter2, 3);
         player2_2.setName(1);
-        player2_2.addCard(new Card(3));
+        player2_2.addCard(new Card(3)); // player2_2's initial hand is 3,3,2,4
         player2_2.addCard(new Card(3));
         player2_2.addCard(new Card(2));
         player2_2.addCard(new Card(4));
         Player player2_3 = new Player(counter2, 3);
         player2_3.setName(2);
-        player2_3.addCard(new Card(1));
+        player2_3.addCard(new Card(1)); // player2_3's initial hand is 1,1,3,4
         player2_3.addCard(new Card(1));
         player2_3.addCard(new Card(3));
         player2_3.addCard(new Card(4));
         CardDeck deck2_1 = new CardDeck();
         deck2_1.setDeckName(0);
-        deck2_1.addCard(new Card(1));
+        deck2_1.addCard(new Card(1)); // deck2_1 initially has 1,1,1,1
         deck2_1.addCard(new Card(1));
         deck2_1.addCard(new Card(1));
         deck2_1.addCard(new Card(1));
         CardDeck deck2_2 = new CardDeck();
         deck2_2.setDeckName(1);
-        deck2_2.addCard(new Card(2));
+        deck2_2.addCard(new Card(2)); // deck2_2 initially has 2,2,2,2
         deck2_2.addCard(new Card(2));
         deck2_2.addCard(new Card(2));
         deck2_2.addCard(new Card(2));
         CardDeck deck2_3 = new CardDeck();
         deck2_3.setDeckName(2);
-        deck2_3.addCard(new Card(3));
+        deck2_3.addCard(new Card(3)); // deck2_3 initially has 3,3,3,3 
         deck2_3.addCard(new Card(3));
         deck2_3.addCard(new Card(3));
         deck2_3.addCard(new Card(3));
@@ -319,15 +318,15 @@ public class TestPlayer{
             e.printStackTrace();
         }
 
-        assertEquals(1, player2_1.getDenomination(0));
+        assertEquals(1, player2_1.getDenomination(0));  // Player 2_1's final hand is 1,1,1,1
         assertEquals(1, player2_1.getDenomination(1));
         assertEquals(1, player2_1.getDenomination(2));
-        assertEquals(1, player2_1.getDenomination(3)); // player 1 should have 4 of denomination 1
-        assertEquals(2, player2_2.getDenomination(0));
+        assertEquals(1, player2_1.getDenomination(3)); 
+        assertEquals(2, player2_2.getDenomination(0));  // Player 2_2's final hand is 2,4,2,2
         assertEquals(4, player2_2.getDenomination(1));
         assertEquals(2, player2_2.getDenomination(2));
         assertEquals(2, player2_2.getDenomination(3));
-        assertEquals(3, player2_3.getDenomination(0));
+        assertEquals(3, player2_3.getDenomination(0));  // Player 2_3's final hand is 3,4,3,3
         assertEquals(4, player2_3.getDenomination(1));
         assertEquals(3, player2_3.getDenomination(2));
         assertEquals(3, player2_3.getDenomination(3)); // player 3 should have 1,2,3,4

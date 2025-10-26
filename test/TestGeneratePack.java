@@ -27,11 +27,11 @@ public class TestGeneratePack {
             while(fileScanner.hasNextLine()){
                 String cardStr = fileScanner.nextLine();
                 int cardInt = Integer.parseInt(cardStr);
-                assertTrue(cardInt >= 0 && cardInt < 34); // For 4 players, denominations should be between 0 and 7
+                assertTrue(cardInt >= 0 && cardInt < 34); // For 17 players, denominations should be between 0 and 33
                 length++;
             }
 
-            assertEquals(136, length); // Placeholder assertion
+            assertEquals(136, length);
         } catch (Exception e){
             e.printStackTrace();
         }

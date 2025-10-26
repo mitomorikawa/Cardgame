@@ -23,11 +23,7 @@ public class Player extends Thread{
         return this.n_of_players;
     }
 
-    public int readCardInHand(int index) {
-        return this.hand.get(index).getDenomination();
-    }
-
-    public void SetName(int index){
+    public void setName(int index){
         this.playerIndex = index;
         this.playerName = "Player"+(index + 1);
     }
@@ -37,9 +33,6 @@ public class Player extends Thread{
     }
 
     public Card removeCard(int index){
-        if(index < 0 || index >= hand.size()){
-            return null;
-        }
         return hand.remove(index);
     }
 
@@ -50,23 +43,6 @@ public class Player extends Thread{
     public void setDecks(CardDeck deckPull, CardDeck deckPush){
         this.deckPull = deckPull;
         this.deckPush = deckPush;
-    }
-
-    public synchronized void endTurn() {
-        if (get_n_of_players() == 1){
-            return;
-        }
-        synchronized(turns){
-        if (turns.addTurn() == get_n_of_players()) {
-            turns.resetTurn();
-            turns.notifyAll();
-        } else {
-            try {
-                turns.wait();
-            } catch (InterruptedException e){
-                }
-        }
-        }
     }
 
     public synchronized void pickFromDeck(){
@@ -90,6 +66,23 @@ public class Player extends Thread{
         outputToFile(currentHand);
     }
 
+    public synchronized void endTurn() {
+        if (get_n_of_players() == 1){
+            return;
+        }
+        synchronized(turns){
+        if (turns.addTurn() == get_n_of_players()) {
+            turns.resetTurn();
+            turns.notifyAll();
+        } else {
+            try {
+                turns.wait();
+            } catch (InterruptedException e){
+                }
+        }
+        }
+    }
+
     @Override
     public void run(){
         do{
@@ -97,7 +90,7 @@ public class Player extends Thread{
             addToDeck();
             endTurn();
             if (checkWinner()){
-                turns.end_game();
+                turns.endGame();
             }
             endTurn();
         } while(!turns.isGameEnded());
@@ -119,12 +112,6 @@ public class Player extends Thread{
         }
     }
 
-    public synchronized void displayHand(){
-        System.out.println(playerName + " hand " + hand.get(0).getDenomination() + " " +  hand.get(1).getDenomination() + " " +
-                    hand.get(2).getDenomination() + " " + hand.get(3).getDenomination() + " ");
-    }
-
-    // Debugging method to get denomination of card at index
     public int getDenomination(int index){
         if(index < 0 || index >= hand.size()){
             return -1;

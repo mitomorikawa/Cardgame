@@ -12,7 +12,7 @@ public class Counter {
     public void resetTurn(){
         turn.set(0);
     }
-    public void end_game(){
+    public void endGame(){
         this.gameEnded = true;
     }
     public boolean isGameEnded(){

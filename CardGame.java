@@ -91,7 +91,7 @@ public class CardGame {
 
         // Set names for players and decks
         for (int i = 0; i < n_of_players; i++){
-            players.get(i).SetName(i);
+            players.get(i).setName(i);
             ListCardDecks.get(i).setDeckName(i);
         }
 
@@ -103,12 +103,7 @@ public class CardGame {
                 players.get(i).setDecks(ListCardDecks.get(i), ListCardDecks.get(i + 1));
             }
             }
-            
-        //debug
-        /*for (int i = 0; i < n_of_players; i++){
-            System.out.println(players.get(i).get_name() + ": " + players.get(i).getDeckPull().getDeckName() + " " + players.get(i).getDeckPush().getDeckName());
-        }*/
-
+        
         // make files for each of the players
         for (int i = 0; i < players.size(); i++) {
             try (FileOutputStream output = new FileOutputStream("../txt/" + players.get(i).get_name() + "_output.txt", false)) {
@@ -119,7 +114,7 @@ public class CardGame {
         }
 
         for (int i = 0; i < players.size(); i++) { // adding initial hand to output file
-            String initialHand = players.get(i).get_name() + " initial hand " + players.get(i).readCardInHand(0) + " " + players.get(i).readCardInHand(1) + " " + players.get(i).readCardInHand(2) + " " + players.get(i).readCardInHand(3) + "\n";
+            String initialHand = players.get(i).get_name() + " initial hand " + players.get(i).getDenomination(0) + " " + players.get(i).getDenomination(1) + " " + players.get(i).getDenomination(2) + " " + players.get(i).getDenomination(3) + "\n";
             players.get(i).outputToFile(initialHand);
         }
 
@@ -163,11 +158,11 @@ public class CardGame {
         for (int i = 0; i < players.size(); i++) {
             if (i == WinnerIndex) {
                 String currentName = players.get(i).get_name();
-                String finalMessage = currentName + " wins\n" + currentName + " exits\n" + currentName + " final hand: " + players.get(i).readCardInHand(0) + " " + players.get(i).readCardInHand(1) + " " + players.get(i).readCardInHand(2) + " " + players.get(i).readCardInHand(3) + "\n";
+                String finalMessage = currentName + " wins\n" + currentName + " exits\n" + currentName + " final hand: " + players.get(i).getDenomination(0) + " " + players.get(i).getDenomination(1) + " " + players.get(i).getDenomination(2) + " " + players.get(i).getDenomination(3) + "\n";
                 players.get(i).outputToFile(finalMessage);
             } else {
                 String currentName = players.get(i).get_name();
-                String finalMessage = players.get(WinnerIndex).get_name() + " has informed " + currentName + " that " + players.get(WinnerIndex).get_name() + " has won\n" + currentName + " exits\n" + currentName + " hand: " + players.get(i).readCardInHand(0) + " " + players.get(i).readCardInHand(1) + " " + players.get(i).readCardInHand(2) + " " + players.get(i).readCardInHand(3) + "\n";
+                String finalMessage = players.get(WinnerIndex).get_name() + " has informed " + currentName + " that " + players.get(WinnerIndex).get_name() + " has won\n" + currentName + " exits\n" + currentName + " hand: " + players.get(i).getDenomination(0) + " " + players.get(i).getDenomination(1) + " " + players.get(i).getDenomination(2) + " " + players.get(i).getDenomination(3) + "\n";
                 players.get(i).outputToFile(finalMessage);
             }
         }

@@ -1,7 +1,7 @@
 package cardgame;
 
 import java.util.ArrayList;
-public class CardDeck {//{extends Thread{
+public class CardDeck {
     private String deckname;
     private ArrayList<Card> deck;
     public CardDeck(){
@@ -20,9 +20,9 @@ public class CardDeck {//{extends Thread{
         deck.add(card);
     }
     public Card drawCard(){
-        if(deck.size() == 0){
-            return null;
-        }
+       // if(deck.size() == 0){
+         //   return null;
+       // }
         return deck.remove(0);
     }
 

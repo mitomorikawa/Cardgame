@@ -37,8 +37,14 @@ public class TestPlayer{
     }
     /*remove readCardInHand 
        SetName -> setName
-       get_name -> getName
        remove displayHand */
+
+    @Test
+    public void testGetNameAndSetName(){
+        player = new Player(counter, 4);
+        player.setName(3);
+        assertEquals("Player4", player.get_name());
+    }
 
     @Test
     public void testGetDenomination(){
@@ -71,7 +77,7 @@ public class TestPlayer{
         File f = new File("../txt/Player1_output.txt"); //Prepare a file object to check file output
         if (f.exists()) f.delete(); // Ensure clean state
         player = new Player(counter, 4);
-        player.SetName(0);
+        player.setName(0);
         CardDeck deck = new CardDeck();
         deck.setDeckName(0);
         deck.addCard(new Card(9));
@@ -93,7 +99,7 @@ public class TestPlayer{
         File f = new File("../txt/Player2_output.txt");
         if (f.exists()) f.delete(); // Ensure clean state
         player = new Player(counter, 4);
-        player.SetName(1); // player 2
+        player.setName(1); // player 2
         CardDeck deckPush = new CardDeck();
         deckPush.setDeckName(2); // deck 3
         player.setDecks(new CardDeck(), deckPush);
@@ -120,11 +126,11 @@ public class TestPlayer{
     @Test
     public void testEndTurn(){
         Player player1 = new Player(counter, 3);
-        player1.SetName(0); // Player1
+        player1.setName(0); // Player1
         Player player2 = new Player(counter, 3);
-        player2.SetName(1); // Player2
+        player2.setName(1); // Player2
         Player player3 = new Player(counter, 3);
-        player3.SetName(2); // Player3
+        player3.setName(2); // Player3
         //  Player1,  2 and 3 runs endTurn in this order
         AtomicInteger finishedThreads = new AtomicInteger(0); // To track finished threads
         Thread t1 = new Thread(() -> {
@@ -158,7 +164,7 @@ public class TestPlayer{
 
 
         Player player4 = new Player(counter, 1);
-        player1.SetName(0); // Single player
+        player1.setName(0); // Single player
         finishedThreads.set(0);  // Reset finished threads counter
         Thread t4 = new Thread(() -> {
             player4.endTurn();
@@ -180,19 +186,19 @@ public class TestPlayer{
         // 3. multiple winners -> first one to notify wins
         Counter counter1 = new Counter();
         Player player1_1 = new Player(counter1, 3);
-        player1_1.SetName(0);
+        player1_1.setName(0);
         player1_1.addCard(new Card(1));
         player1_1.addCard(new Card(1));
         player1_1.addCard(new Card(1));
         player1_1.addCard(new Card(2)); 
         Player player1_2 = new Player(counter1, 3);
-        player1_2.SetName(1);
+        player1_2.setName(1);
         player1_2.addCard(new Card(3));
         player1_2.addCard(new Card(2));
         player1_2.addCard(new Card(3));
         player1_2.addCard(new Card(4));
         Player player1_3 = new Player(counter1, 3);
-        player1_3.SetName(2);
+        player1_3.setName(2);
         player1_3.addCard(new Card(1));
         player1_3.addCard(new Card(2));
         player1_3.addCard(new Card(3));
@@ -257,19 +263,19 @@ public class TestPlayer{
 
         Counter counter2 = new Counter();
         Player player2_1 = new Player(counter2, 3);
-        player2_1.SetName(0);
+        player2_1.setName(0);
         player2_1.addCard(new Card(1));
         player2_1.addCard(new Card(1));
         player2_1.addCard(new Card(2));
         player2_1.addCard(new Card(2)); 
         Player player2_2 = new Player(counter2, 3);
-        player2_2.SetName(1);
+        player2_2.setName(1);
         player2_2.addCard(new Card(3));
         player2_2.addCard(new Card(3));
         player2_2.addCard(new Card(2));
         player2_2.addCard(new Card(4));
         Player player2_3 = new Player(counter2, 3);
-        player2_3.SetName(2);
+        player2_3.setName(2);
         player2_3.addCard(new Card(1));
         player2_3.addCard(new Card(1));
         player2_3.addCard(new Card(3));
@@ -336,7 +342,7 @@ public class TestPlayer{
     @Test
     public void testOutputToFile(){
         player = new Player(counter, 4);
-        player.SetName(3);
+        player.setName(3);
         File f = new File("../txt/Player4_output.txt");
         if (f.exists()) f.delete(); // Ensure clean state
         player.outputToFile("TestOutput\n");

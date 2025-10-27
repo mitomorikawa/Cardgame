@@ -2,7 +2,7 @@
 ## How to compile and run cardgame ##
 0. First of all, make sure that the name of the root directory is cardgame
 
-1. In the cardgame directory run 
+1. If the java files haven't been compiled, in the cardgame directory run 
 ```
  javac -d bin *.java
 ```
@@ -21,7 +21,7 @@ and input the number of players.
 ## How to compile and run tests ##
 before running this, make sure junit-4.12.jar and hamcrest-core-1.3.jar are installed and the classpath is pointing at the correct path to them 
 
-1. In the cardgame directory run 
+1. If the java files haven't been compiled, in the cardgame directory run 
   ```
  javac -d bin *.java
 ```
@@ -35,7 +35,7 @@ java  org.junit.runner.JUnitCore cardgame.test.TestSuite
 ```
 
 ## *How to generate a pack file ##
-1. In the cardgame directory run 
+1. If the java files haven't been compiled, in the cardgame directory run 
 ```
  javac -d bin *.java
 ```

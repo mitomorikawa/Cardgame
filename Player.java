@@ -23,7 +23,7 @@ public class Player extends Thread{
         return this.n_of_players;
     }
 
-    public void SetName(int index){ // sets name for player depending on index 
+    public void setName(int index){ // sets name for player depending on index 
         this.playerIndex = index;
         this.playerName = "Player"+(index + 1);
     }
@@ -33,9 +33,6 @@ public class Player extends Thread{
     }
 
     public Card removeCard(int index){ // removes the specific index of a card object from the players hand 
-        if(index < 0 || index >= hand.size()){ 
-            return null;
-        }
         return hand.remove(index);
     }
 
@@ -46,23 +43,6 @@ public class Player extends Thread{
     public void setDecks(CardDeck deckPull, CardDeck deckPush){ // takes arguements that are the specified decks each player is supposed to pick from and discard to 
         this.deckPull = deckPull;
         this.deckPush = deckPush;
-    }
-
-    public synchronized void endTurn() { // makes all players wait till they have all caught up to the same point
-        if (get_n_of_players() == 1){
-            return;
-        }
-        synchronized(turns){
-        if (turns.addTurn() == get_n_of_players()) {
-            turns.resetTurn();
-            turns.notifyAll();
-        } else {
-            try {
-                turns.wait();
-            } catch (InterruptedException e){
-                }
-        }
-        }
     }
 
     public synchronized void pickFromDeck(){ // draws a card from the deck the player is supposed to draw from
@@ -86,6 +66,24 @@ public class Player extends Thread{
         outputToFile(currentHand); // outputs to file
     }
 
+    public synchronized void endTurn() { // makes all players wait till they have all caught up to the same point
+        if (get_n_of_players() == 1){
+            return;
+        }
+        synchronized(turns){
+        if (turns.addTurn() == get_n_of_players()) {
+            turns.resetTurn();
+            turns.notifyAll();
+        } else {
+            try {
+                turns.wait();
+            } catch (InterruptedException e){
+                }
+        }
+        }
+    }
+
+
     @Override
     public void run(){ // main thread run method loops over till a player has won 
         do{
@@ -93,7 +91,7 @@ public class Player extends Thread{
             addToDeck();
             endTurn();
             if (checkWinner()){
-                turns.end_game();
+                turns.endGame();
             }
             endTurn();
         } while(!turns.isGameEnded());
@@ -120,5 +118,12 @@ public class Player extends Thread{
             return -1;
             }
         return hand.get(index).getDenomination();
+    }
+
+     public CardDeck getDeckPull(){
+        return this.deckPull;
+    }
+    public CardDeck getDeckPush(){
+        return this.deckPush;
     }
 }

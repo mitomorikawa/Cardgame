@@ -41,6 +41,9 @@ public class CardGame {
                 int cardInt = Integer.parseInt(cardStr);
                 if (cardInt < 0) throw new NumberFormatException("Found a negative integer in the pack file.");
                 pack_int.add(cardInt);
+                if (i == 8 * n_of_players - 1 && fileScanner.hasNextLine()){
+                    throw new NumberFormatException("The pack file has more cards than expected. Generate a correct pack file by running GeneratePack.java with the correct number of players.");
+                }
             } catch (EOFException e){
                 System.err.println(e.getMessage());
                 return;

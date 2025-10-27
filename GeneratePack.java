@@ -11,7 +11,7 @@ public class GeneratePack{
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the number of players:");
         int n_of_players = scanner.nextInt();
-        String path = "../txt/pack.txt";
+        String path = "pack.txt";
         try (FileWriter writer = new FileWriter(path)){
             for (int i = 0; i < 8 * n_of_players; i++){
                 int randomInt = r.nextInt(0, 2*n_of_players); // Each card denomination is a random int between 0 and 2*n_of_players-1

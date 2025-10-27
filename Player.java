@@ -104,7 +104,7 @@ public class Player extends Thread{
     }
 
     public void outputToFile(String message) { // outputs to the player files
-        try (FileOutputStream output = new FileOutputStream("../txt/" + playerName + "_output.txt", true)) {
+        try (FileOutputStream output = new FileOutputStream(playerName + "_output.txt", true)) {
             byte[] messageBytes = message.getBytes();
             output.write(messageBytes);
         } catch (IOException e){

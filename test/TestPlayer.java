@@ -77,7 +77,7 @@ public class TestPlayer{
 
     @Test
     public void testPickFromDeck(){
-        File f = new File("../txt/Player1_output.txt"); //Prepare a file object to check file output
+        File f = new File("Player1_output.txt"); //Prepare a file object to check file output
         if (f.exists()) f.delete(); // Ensure clean state
         player = new Player(counter, 4);
         player.setName(0); // Player 1
@@ -88,7 +88,7 @@ public class TestPlayer{
         player.pickFromDeck();
         assertEquals(9, player.getDenomination(0)); // Card with denomination 9 should be in hand
 
-        try (Scanner file = new Scanner(new File("../txt/Player1_output.txt"))){
+        try (Scanner file = new Scanner(new File("Player1_output.txt"))){
             String line = file.nextLine();
 
             assertEquals("Player1 draws a 9 from Deck1", line);
@@ -99,7 +99,7 @@ public class TestPlayer{
 
     @Test
     public void testAddToDeck(){
-        File f = new File("../txt/Player2_output.txt");
+        File f = new File("Player2_output.txt");
         if (f.exists()) f.delete(); // Ensure clean state
         player = new Player(counter, 4);
         player.setName(1); // player 2
@@ -121,7 +121,7 @@ public class TestPlayer{
         assertEquals(2, player.getDenomination(1));
         assertEquals(4, player.getDenomination(2));
         assertEquals(2, player.getDenomination(3)); 
-        try (Scanner file = new Scanner(new File("../txt/Player2_output.txt"))){
+        try (Scanner file = new Scanner(new File("Player2_output.txt"))){
             String line = file.nextLine();
             assertEquals("Player2 discards a 5 to Deck3", line);
         } catch (Exception e){
@@ -348,11 +348,11 @@ public class TestPlayer{
     public void testOutputToFile(){
         player = new Player(counter, 4);
         player.setName(3);
-        File f = new File("../txt/Player4_output.txt");
+        File f = new File("Player4_output.txt");
         if (f.exists()) f.delete(); // Ensure clean state
         player.outputToFile("TestOutput\n");
-        player.outputToFile("TestOutput2\n"); // Write 2 lines to a blank file "../txt/Player4_output.txt"
-        try (Scanner file = new Scanner(new File("../txt/Player4_output.txt"))){
+        player.outputToFile("TestOutput2\n"); // Write 2 lines to a blank file "Player4_output.txt"
+        try (Scanner file = new Scanner(new File("Player4_output.txt"))){
             String line = file.nextLine();
             assertEquals("TestOutput", line);
             line = file.nextLine();

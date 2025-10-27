@@ -22,7 +22,7 @@ public class TestGeneratePack {
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         GeneratePack.main(args);
-        try (Scanner fileScanner = new Scanner(new File("../txt/pack.txt"))){
+        try (Scanner fileScanner = new Scanner(new File("pack.txt"))){
             int length = 0;
             while(fileScanner.hasNextLine()){
                 String cardStr = fileScanner.nextLine();

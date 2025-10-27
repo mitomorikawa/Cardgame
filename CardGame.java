@@ -3,9 +3,11 @@ package cardgame;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.*;
+import java.lang.IllegalArgumentException;
 
 public class CardGame {
     static int n_of_players;
+    static String pack_path;
     static ArrayList<Player> players = new ArrayList<Player>();
     static ArrayList<CardDeck> ListCardDecks = new ArrayList<CardDeck>();
     
@@ -22,6 +24,19 @@ public class CardGame {
             System.out.println("Invalid input. Please enter a valid integer for the number of players.");
             return; // Exit the method if input is invalid
         }
+
+        System.out.println("Please enter the path to the pack file");
+        
+        pack_path = inputScanner.nextLine();
+
+        try {
+            if (pack_path.length() <= 4 && !pack_path.substring(pack_path.length() - 4).equals(".txt")) {
+                throw new IllegalArgumentException("The pack file must have a .txt extension.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+            return;
+        }
     }
 
     public static void main(String[] args){
@@ -29,7 +44,7 @@ public class CardGame {
         readFile(); // starts game for asking for number of players and ensuring its a valid number
 
         ArrayList<Integer> pack_int = new ArrayList<Integer>();
-        File file = new File("../txt/pack.txt");
+        File file = new File(pack_path);
 
         try (Scanner fileScanner = new Scanner(file)){ // asks for directory of a pack file
         for (int i = 0; i < 8 * n_of_players; i++){
@@ -104,7 +119,7 @@ public class CardGame {
             }
         
         for (int i = 0; i < players.size(); i++) { // make files for each of the players
-            try (FileOutputStream output = new FileOutputStream("../txt/" + players.get(i).get_name() + "_output.txt", false)) {
+            try (FileOutputStream output = new FileOutputStream( players.get(i).get_name() + "_output.txt", false)) {
             } catch (IOException e){
                 System.out.println("Error");
                 e.printStackTrace();
@@ -135,7 +150,7 @@ public class CardGame {
 
         for (int i = 0; i < ListCardDecks.size(); i++) { // makes the deck files and the outputs the final deck values to it too
             String deckContents = ListCardDecks.get(i).getDeckName() + " contents: " + ListCardDecks.get(i).getDenomination(0) + " " + ListCardDecks.get(i).getDenomination(1) + " " + ListCardDecks.get(i).getDenomination(2) + " " + ListCardDecks.get(i).getDenomination(3) + "\n";
-            try (FileOutputStream output = new FileOutputStream("../txt/" + ListCardDecks.get(i).getDeckName() + "_output.txt", false)) {
+            try (FileOutputStream output = new FileOutputStream(ListCardDecks.get(i).getDeckName() + "_output.txt", false)) {
                 byte[] deckContentsBytes = deckContents.getBytes();
                 output.write(deckContentsBytes);
             } catch (IOException e){

@@ -23,7 +23,7 @@ public class TestCardGame {
     @Test
     public void testMain(){
         String[] args = null;
-        String path = "../txt/pack.txt";
+        String path = "pack.txt";
         int n_of_players = 3;
         int[] pack = {1,3,1,1,3,1,2,2,3,2,4,4,1,2,3,1,2,3,1,2,3,1,2,3};
         String[] expectedDeckFileLine = {"Deck1 contents: 1 1 1 1", "Deck2 contents: 2 2 2 2", "Deck3 contents: 3 3 3 3"};
@@ -44,22 +44,22 @@ public class TestCardGame {
         } catch (IOException e){
             e.printStackTrace();
         }
-        String input = n_of_players + "\n"; // Simulate a standard input 
+        String input = n_of_players + "\n" + path + "\n"; // Simulate a standard input 
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         System.setOut(new PrintStream(out));
         CardGame.main(args);
         String standardOutput = out.toString(); // Standard output from main will be stored here
-        assertEquals("Please enter the number of players\nPlayer1 wins\n", standardOutput);
+        assertEquals("Please enter the number of players\nPlease enter the path to the pack file\nPlayer1 wins\n", standardOutput);
         for (int i = 0; i < n_of_players; i++){
-            try (Scanner deckFile = new Scanner(new File("../txt/Deck"+(i+1)+"_output.txt"))){ // verify the contents of deck output files
+            try (Scanner deckFile = new Scanner(new File("Deck"+(i+1)+"_output.txt"))){ // verify the contents of deck output files
                 String deckFileLine = deckFile.nextLine();
                 assertEquals(expectedDeckFileLine[i], deckFileLine);
             } catch (Exception e){
             e.printStackTrace();
             }
-            try (Scanner playerFile = new Scanner(new File("../txt/Player"+(i+1)+"_output.txt"))){ // verify the contents of player output files
+            try (Scanner playerFile = new Scanner(new File("Player"+(i+1)+"_output.txt"))){ // verify the contents of player output files
                 for (int j = 0; j < expectedPlayerFileLine[i].length; j++){
                     String playerFileLine = playerFile.nextLine();
                     assertEquals(expectedPlayerFileLine[i][j], playerFileLine);

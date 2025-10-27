@@ -1,8 +1,6 @@
 # CardGame #
 ## How to compile and run cardgame ##
-0. First of all, make sure that   
-• the name of the root directory is cardgame, and  
-• you create a folder called txt under the root directory, if it doesn't exist.
+0. First of all, make sure that the name of the root directory is cardgame
 
 1. In the cardgame directory run 
 ```

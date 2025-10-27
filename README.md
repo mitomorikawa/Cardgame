@@ -18,7 +18,7 @@
 ```
 java cardgame.CardGame
 ```
-and input the number of players. Make sure that you input 
+and input the number of players.  
 
 ## How to compile and run tests ##
 before running this, make sure junit-4.12.jar and hamcrest-core-1.3.jar are installed and the classpath is pointing at the correct path to them 

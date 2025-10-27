@@ -9,14 +9,14 @@ public class CardGame {
     static ArrayList<Player> players = new ArrayList<Player>();
     static ArrayList<CardDeck> ListCardDecks = new ArrayList<CardDeck>();
     
-    public static void readFile(){
+    public static void readFile(){ // reads the input files and asks for number of players
         System.out.println("Please enter the number of players");
         Scanner inputScanner = new Scanner(System.in);
         String n_of_players_str = inputScanner.nextLine();
         
         // Ensure n_of_players represents Int
 
-        try {
+        try { // checks to see if valid input
             n_of_players = Integer.parseInt(n_of_players_str);
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. Please enter a valid integer for the number of players.");
@@ -25,16 +25,15 @@ public class CardGame {
     }
 
     public static void main(String[] args){
-        Counter turns = new Counter();
-        readFile();
+        Counter turns = new Counter(); // initialises the turn counter
+        readFile(); // starts game for asking for number of players and ensuring its a valid number
 
         ArrayList<Integer> pack_int = new ArrayList<Integer>();
         File file = new File("../txt/pack.txt");
 
-        try (Scanner fileScanner = new Scanner(file)){
+        try (Scanner fileScanner = new Scanner(file)){ // asks for directory of a pack file
         for (int i = 0; i < 8 * n_of_players; i++){
-            try {
-                
+            try { // ensures pack file is valid
                 if (!fileScanner.hasNextLine() && i < 8 * n_of_players - 1){
                     throw new EOFException("The pack file has fewer cards than expected. Generate a correct pack file by running GeneratePack.java with the correct number of players.");
                 }
@@ -56,14 +55,14 @@ public class CardGame {
         }
 
 
-        CardDeck pack = new CardDeck();
+        CardDeck pack = new CardDeck(); // makes the pack into a carddeck object
         for (int i = 0; i < pack_int.size(); i++){
             Card card = new Card(pack_int.get(i));
             pack.addCard(card);
         }
 
         
-        for (int i = 0; i < n_of_players; i++){
+        for (int i = 0; i < n_of_players; i++){ // makes all of the player objects required
             Player player = new Player(turns, n_of_players);
             players.add(player);
         }
@@ -73,29 +72,26 @@ public class CardGame {
             ListCardDecks.add(Card_Deck);
         }
         
-        // Distribute cards to players
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 4; i++){ // distribute cards to players
             for (int j = 0; j < n_of_players; j++){
                 Card card = pack.drawCard();
                 players.get(j).addCard(card);
             }
         }
 
-        // Distribute cards to decks 
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 4; i++){ // distribute cards to decks
             for (int j = 0; j < n_of_players; j++){
                 Card card = pack.drawCard();
                 ListCardDecks.get(j).addCard(card);
             }
         }
 
-        // Set names for players and decks
-        for (int i = 0; i < n_of_players; i++){
+        for (int i = 0; i < n_of_players; i++){ // set names for players and decks
             players.get(i).setName(i);
             ListCardDecks.get(i).setDeckName(i);
         }
 
-        for (int i = 0; i < n_of_players; i++){
+        for (int i = 0; i < n_of_players; i++){ // passes the decks that each player is supposed to pick or discard to to the player
             if (i == n_of_players - 1){
                 players.get(i).setDecks(ListCardDecks.get(i), ListCardDecks.get(0));
             }
@@ -104,8 +100,7 @@ public class CardGame {
             }
             }
         
-        // make files for each of the players
-        for (int i = 0; i < players.size(); i++) {
+        for (int i = 0; i < players.size(); i++) { // make files for each of the players
             try (FileOutputStream output = new FileOutputStream("../txt/" + players.get(i).get_name() + "_output.txt", false)) {
             } catch (IOException e){
                 System.out.println("Error");
@@ -118,11 +113,11 @@ public class CardGame {
             players.get(i).outputToFile(initialHand);
         }
 
-        if (determineWinner() != -1) {
-            writeToFiles(determineWinner());
+        if (determineWinner() != -1) { // checks to see if there is a winner 
+            writeToFiles(determineWinner()); // writes last lines of game to files
             System.out.println(players.get(determineWinner()).get_name() + " wins");
         } else {
-            for(int i = 0; i < players.size(); i++){
+            for(int i = 0; i < players.size(); i++){ // starts threads for each of the players
                 players.get(i).start();
             }
             for(int i = 0; i < players.size(); i++){
@@ -131,11 +126,11 @@ public class CardGame {
                 } catch (InterruptedException e) {   
                 }
             }
-            writeToFiles(determineWinner());
+            writeToFiles(determineWinner()); // writes last lines of game to files
             System.out.println(players.get(determineWinner()).get_name() + " wins");
         }
 
-        for (int i = 0; i < ListCardDecks.size(); i++) {
+        for (int i = 0; i < ListCardDecks.size(); i++) { // makes the deck files and the outputs the final deck values to it too
             String deckContents = ListCardDecks.get(i).getDeckName() + " contents: " + ListCardDecks.get(i).getDenomination(0) + " " + ListCardDecks.get(i).getDenomination(1) + " " + ListCardDecks.get(i).getDenomination(2) + " " + ListCardDecks.get(i).getDenomination(3) + "\n";
             try (FileOutputStream output = new FileOutputStream("../txt/" + ListCardDecks.get(i).getDeckName() + "_output.txt", false)) {
                 byte[] deckContentsBytes = deckContents.getBytes();
@@ -147,14 +142,7 @@ public class CardGame {
         }
     }
 
-/*         // Check for winner
-        if (determineWinner() != -1) {
-            return;
-        } else {
-            return;
-        }
-*/
-    public static void writeToFiles(int WinnerIndex) {
+    public static void writeToFiles(int WinnerIndex) { // write the last lines of the game to each of the player files depending if they're the winner or not 
         for (int i = 0; i < players.size(); i++) {
             if (i == WinnerIndex) {
                 String currentName = players.get(i).get_name();
@@ -168,16 +156,12 @@ public class CardGame {
         }
     }
 
-    public static int determineWinner(){
+    public static int determineWinner(){ // looks through the players starting from 1 and checks to see if there is a winner if there is returns the index of the winner
         for (int i = 0; i < n_of_players; i++){
             if (players.get(i).checkWinner()){
                 return i;
             }
         }
         return -1; // no winner
-    }
-
-    public void endGame(int winner){
-        System.out.println(players.get(winner).get_name() + " wins");
     }
 }
